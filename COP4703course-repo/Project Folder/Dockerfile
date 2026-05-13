@@ -13,5 +13,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application files
 COPY . .
 
-# Run the Session #4 Python program
-# CMD ["python", "scripts/session4_one_command_launch.py"]
+# Run the Session #2 Python program
+CMD ["python", "session2_correct_syntax.py"]

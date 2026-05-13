@@ -1,0 +1,35 @@
+services:
+
+# Service name "db" builds a container to run PostgreSQL DB
+  db:
+    image: postgres:15-alpine
+    container_name: my_db
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+# Healthcheck added because Python tried to connect to DB 
+# before the DB was available - needs to wait.
+    healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U postgres"]
+        interval: 5s
+        timeout: 5s
+        retries: 10
+
+# Service name "api" builds a container to run Python app
+  api:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+
+# Service name "pgadmin" builds a container to run 
+# PostgreSQL GUI interface.
+#  pgadmin:
+#    image: dpage/pgadmin4
+#    container_name: my_pgadmin
+#    ports:
+#      - "5050:80"
+#    environment:
+#      PGADMIN_DEFAULT_EMAIL: admin@example.com
+#      PGADMIN_DEFAULT_PASSWORD: admin
